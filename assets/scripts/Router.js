@@ -25,7 +25,7 @@ export class Router {
   }
 
   /**
-   * Adds a page name & function so to the router so that the function
+   * Adds a page name & function to the router so that the function
    * can be called later when the page is passed in
    * @param {String} page The name of the page to route to (this is used
    *                      as the page's hash as well in the URL)
@@ -38,6 +38,7 @@ export class Router {
      * router instance using the 'this' keyword. Substitute 'home' for the variable
      * page
      */
+    this[page] = pageFunc;
   }
 
   /**
@@ -65,5 +66,20 @@ export class Router {
      *     and URL + hash to history
      *  4. Finally, call the stored function for the given page
      */
+    if(!this[page]){
+      console.log("Error, function doesn't exist");
+      return;
+    }
+    var hash;
+    if(page == 'home'){
+      hash = "";
+    }
+    else{
+      hash = "#"+page;
+    }
+    if(!statePopped && window.location.hash != hash){
+      history.pushState({page: page}, "",  window.location+hash);
+    }
+    this[page]();
   }
 }
